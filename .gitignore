@@ -1,0 +1,4 @@
+.git
+.direnv
+.envrc
+__pycache__
