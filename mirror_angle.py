@@ -31,8 +31,9 @@ data = get_dict(get_date_location())
 
 
 def vert_angle(time):
+    """h and d are height and depth component of
+    horiz. distance from mirror to target"""
 
-    # h and d are height and horiz. distance of mirror to target
     # TODO replace set values with inputs
     h = 8
     d = 5
@@ -40,7 +41,20 @@ def vert_angle(time):
     return (degrees(atan2(h, d)) - data[time]['altitude']) / 2
 
 
-for i in range(6, 19):
+def horiz_angle(time):
+    """
+    assumes d points due east from origin, w points due north.
+    add feature to adjust for actual heading.
+    """
+
+    # TODO replace set values with inputs, don't define d twice
+    d = 5
+    w = 10
+
+    return (180 - data[time]['azimuth'] - atan2(d, w)) / 2
+
+
+for i in range(6, 20):
     time = '{}:00:00'.format(i)
     # time_data = data[time]
-    print(time + ':', 'altitude:', data[time]['altitude'], 'd:', vert_angle(time))
+    print(time + ':', 'azimuth:', data[time]['azimuth'])
