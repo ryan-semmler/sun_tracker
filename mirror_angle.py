@@ -4,7 +4,8 @@ from datetime import datetime as dt
 
 
 def get_date_location():
-    if 'y' in input("Use current date? (y/n) ").lower():
+    # if 'y' in input("Use current date? (y/n) ").lower():
+    if True:
         now = dt.now()
         start_year = now.year
         start_month = now.month
@@ -37,24 +38,41 @@ def vert_angle(time):
     # TODO replace set values with inputs
     h = 8
     d = 5
+    w = 10
 
-    return (degrees(atan2(h, d)) - data[time]['altitude']) / 2
+    distance = (d ** 2 + w ** 2) ** 0.5
+
+    return (degrees(atan2(h, distance)) - data[time]['altitude']) / 2
 
 
 def horiz_angle(time):
     """
-    assumes d points due east from origin, w points due north.
-    add feature to adjust for actual heading.
+    returns horizontal angle of mirror in degrees, measured
+    clockwise from the apparatus heading, where a_h = 0 means
+    the w axis points due north
     """
 
     # TODO replace set values with inputs, don't define d twice
     d = 5
     w = 10
 
-    return (180 - data[time]['azimuth'] - atan2(d, w)) / 2
+    # direction of the sun. measured in degrees counted clockwise from north.
+    azimuth = data[time]['azimuth']
 
+    # adjust azimuth to be relative to direction of mirror setup.
+    # TODO add separate file to store configuration info. draw info from file.
+    # TODO combine w and d vars into just distance, then get heading separately
+    apparatus_heading = 50
+    azimuth -= apparatus_heading
+
+    # old answer:
+    # return (azimuth + atan2(d, w) - 180) / 2
+
+    return ((atan2(d, w) + azimuth) / 2 - 90) % 360
 
 for i in range(6, 20):
     time = '{}:00:00'.format(i)
     # time_data = data[time]
-    print(time + ':', 'azimuth:', data[time]['azimuth'])
+    print(time + ':',
+          'azimuth:', round(data[time]['azimuth'] - 50, 4),
+          'angle:', horiz_angle(time))
