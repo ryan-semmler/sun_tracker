@@ -3,17 +3,16 @@ from math import atan2, degrees
 from datetime import datetime as dt
 
 
-def get_date_location():
-    # if 'y' in input("Use current date? (y/n) ").lower():
-    if True:
-        now = dt.now()
-        start_year = now.year
-        start_month = now.month
-        start_day = now.day
-    else:
-        start_year = input("start year: ")
-        start_month = input("start month: ")
-        start_day = input("start day: ")
+with open('configuration.csv', 'r') as f:
+    config = next(f)
+height, distance, angle, lat, lon = config.split(',')
+
+
+def get_date_location(lat, lon):
+    now = dt.now()
+    start_year = now.year
+    start_month = now.month
+    start_day = now.day
 
     # currently only supports single-day
     # end_year = input("end year: ")
@@ -25,10 +24,11 @@ def get_date_location():
 
     latitude = '35.951053'
     longitude = '-78.544401'
+    print('locals:', locals())
     return locals()
 
 
-data = get_dict(get_date_location())
+data = get_dict(get_date_location(lat, lon))
 
 
 def vert_angle(time):
@@ -60,19 +60,11 @@ def horiz_angle(time):
     azimuth = data[time]['azimuth']
 
     # adjust azimuth to be relative to direction of mirror setup.
-    # TODO add separate file to store configuration info. draw info from file.
     # TODO combine w and d vars into just distance, then get heading separately
     apparatus_heading = 50
     azimuth -= apparatus_heading
 
-    # old answer:
-    # return (azimuth + atan2(d, w) - 180) / 2
-
     return ((atan2(d, w) + azimuth) / 2 - 90) % 360
 
-for i in range(6, 20):
-    time = '{}:00:00'.format(i)
-    # time_data = data[time]
-    print(time + ':',
-          'azimuth:', round(data[time]['azimuth'] - 50, 4),
-          'angle:', horiz_angle(time))
+
+print(data)

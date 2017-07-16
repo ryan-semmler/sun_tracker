@@ -18,6 +18,7 @@ def get_dict(info):
     lat = info['latitude']
     lon = info['longitude']
 
+    # TODO check this url for more vars. see: timezone, etc
     url = ''.join(['https://midcdmz.nrel.gov/apps/solpos.pl?',
                    'syear={}'.format(syear),
                    '&smonth={}'.format(smonth),
