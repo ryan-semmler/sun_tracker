@@ -1,8 +1,29 @@
 # import csv
 # import urllib.request
 import requests
+from time import time
 # from lxml import html
 # from datetime import time
+
+
+def get_timezone(info):
+    """
+    returns time, in hours, behind utc.
+    """
+
+    api_key = 'AIzaSyDDbyw4tB8C9LhZ80VLnYFsLeBqBrXEj9g'
+    timestamp = time()
+    lat = info['latitude']
+    lon = info['longitude']
+    url = ''.join(['https://maps.googleapis.com/maps/api/timezone/json?',
+                   'location={},{}'.format(lat, lon),
+                   '&timestamp={}'.format(timestamp),
+                   '&key={}'.format(api_key)])
+    response = requests.get(url).json()
+    offset = (response['dstOffset'] + response['rawOffset']) / 3600
+    if int(offset) == offset:
+        offset = int(offset)
+    return offset
 
 
 def get_dict(info):
@@ -28,7 +49,8 @@ def get_dict(info):
                    '&eday={}'.format(sday),
                    '&step=1&stepunit=1&latitude={}'.format(lat),
                    '&longitude={}'.format(lon),
-                   '&timezone=-5&press=1030&temp=23&aspect=180&tilt=0',
+                   '&timezone={}'.format(get_timezone(info)),
+                   '&press=1030&temp=23&aspect=180&tilt=0',
                    '&solcon=1367&sbwid=7.6&sbrad=31.7&sbsky=0.04',
                    '&interval=0&field=34&field=2&zip=0'])
 
@@ -40,6 +62,7 @@ def get_dict(info):
     clean_string = ''.join(total_string.split("''"))
     all_data = clean_string.split('\\n')[1:-1]
     data = {}
+    # TODO account for daylight savings. Currently shows all times standard
     for row in all_data:
         split_data = row.split(',')
         if float(split_data[2]) < 90:

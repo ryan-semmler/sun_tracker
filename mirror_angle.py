@@ -24,7 +24,6 @@ def get_date_location(lat, lon):
 
     latitude = '35.951053'
     longitude = '-78.544401'
-    print('locals:', locals())
     return locals()
 
 
