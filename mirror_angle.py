@@ -30,7 +30,7 @@ def vert_angle(time):
 
     distance = (d ** 2 + w ** 2) ** 0.5
 
-    return (degrees(atan2(h, distance)) - data[time]['altitude']) / 2
+    return round((degrees(atan2(h, distance)) - data[time]['altitude']) / 2, 4)
 
 
 def horiz_angle(time):
@@ -39,6 +39,8 @@ def horiz_angle(time):
     clockwise from the apparatus heading, where a_h = 0 means
     the w axis points due north
     """
+
+    # TODO What should 0deg be? Set it to inline w/ target?
 
     # TODO replace set values with inputs, don't define d twice
     d = 5
@@ -49,9 +51,9 @@ def horiz_angle(time):
 
     # adjust azimuth to be relative to direction of mirror setup.
     # TODO combine w and d vars into just distance, then get heading separately
-    azimuth -= int(angle)
+    azimuth -= azimuth - int(angle)
 
-    return ((atan2(d, w) + azimuth) / 2 - 90) % 360
+    return round(((atan2(d, w) + azimuth) / 2 - 90) % 360, 4)
 
 
 def mirror_api():
@@ -61,7 +63,8 @@ def mirror_api():
 
     api = {}
     for key in data.keys():
-        api[key] = {'vert': vert_angle(key), 'horiz': horiz_angle(key)}
+        api[key] = {'vertical': vert_angle(key),
+                    'horizontal': horiz_angle(key)}
     return api
 
 
