@@ -1,14 +1,10 @@
-# import csv
-# import urllib.request
 import requests
 from time import time
-# from lxml import html
-# from datetime import time
 
 
 def get_timezone(info):
     """
-    returns time, in hours, behind utc.
+    returns time difference, in hours, from utc.
     """
 
     api_key = 'AIzaSyDDbyw4tB8C9LhZ80VLnYFsLeBqBrXEj9g'
@@ -21,8 +17,6 @@ def get_timezone(info):
                    '&key={}'.format(api_key)])
     response = requests.get(url).json()
     offset = (response['dstOffset'] + response['rawOffset']) / 3600
-    if int(offset) == offset:
-        offset = int(offset)
     return offset
 
 
@@ -39,7 +33,6 @@ def get_dict(info):
     lat = info['latitude']
     lon = info['longitude']
 
-    # TODO check this url for more vars. see: timezone, etc
     url = ''.join(['https://midcdmz.nrel.gov/apps/solpos.pl?',
                    'syear={}'.format(syear),
                    '&smonth={}'.format(smonth),
@@ -55,14 +48,12 @@ def get_dict(info):
                    '&interval=0&field=34&field=2&zip=0'])
 
     page = requests.get(url)
-    # tree = html.fromstring(page.content)
     total_string = ""
     for item in page:
         total_string += str(item)[1:]
     clean_string = ''.join(total_string.split("''"))
     all_data = clean_string.split('\\n')[1:-1]
     data = {}
-    # TODO account for daylight savings. Currently shows all times standard
     for row in all_data:
         split_data = row.split(',')
         if float(split_data[2]) < 90:

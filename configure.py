@@ -10,7 +10,7 @@ Press Enter to continue""")
 
 height = input("""How high above your target is the center of your mirror? """)
 distance = input("""What is the distance between your target and your mirror, measured horizontally? """)
-angle = input("""Standing on the target spot, what direction is the mirror from where you are?\nUse a compass to answer in degrees, and be as precise as possible.\nNote that 0° is due north and 90° is due east. """)
+angle = input("""Standing on the target spot, what direction is the mirror from where you are?\nAnswer in degrees, and be as precise as possible.\nNote that 0° is due north and 90° is due east. """)
 lat = input('Enter your latitude: ')
 lon = input('Enter your longitude: ')
 

@@ -3,30 +3,19 @@ from math import atan2, degrees
 from datetime import datetime as dt
 
 
-with open('configuration.csv', 'r') as f:
-    config = next(f)
-height, distance, angle, lat, lon = config.split(',')
-
-
 def get_date_location(lat, lon):
     now = dt.now()
     start_year = now.year
     start_month = now.month
     start_day = now.day
-
-    # currently only supports single-day
-    # end_year = input("end year: ")
-    # end_month = input("end month: ")
-    # end_day = input("end day: ")
-
-    # latitude = input("latitude: ")
-    # longitude = input("longitude: ")
-
     latitude = '35.951053'
     longitude = '-78.544401'
     return locals()
 
 
+with open('configuration.csv', 'r') as f:
+    config = next(f)
+height, distance, angle, lat, lon = config.split(',')
 data = get_dict(get_date_location(lat, lon))
 
 
@@ -60,10 +49,20 @@ def horiz_angle(time):
 
     # adjust azimuth to be relative to direction of mirror setup.
     # TODO combine w and d vars into just distance, then get heading separately
-    apparatus_heading = 50
-    azimuth -= apparatus_heading
+    azimuth -= int(angle)
 
     return ((atan2(d, w) + azimuth) / 2 - 90) % 360
 
 
-print(data)
+def mirror_api():
+    """
+    returns dict w/ horiz and vert mirror angles for every minute of daylight
+    """
+
+    api = {}
+    for key in data.keys():
+        api[key] = {'vert': vert_angle(key), 'horiz': horiz_angle(key)}
+    return api
+
+
+print(mirror_api())
