@@ -1,6 +1,7 @@
 from web_scrape import get_dict
 from math import atan2, degrees
 from datetime import datetime as dt
+import pprint
 
 
 def get_date_location(lat, lon):
@@ -68,4 +69,4 @@ def mirror_api():
     return api
 
 
-print(mirror_api())
+pprint.pprint(mirror_api())
