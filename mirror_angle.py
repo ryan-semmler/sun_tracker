@@ -41,7 +41,7 @@ def horiz_angle(time):
     the w axis points due north
     """
 
-    # TODO What should 0deg be? Set it to inline w/ target?
+    # TODO What should 0deg be? Set it to inline w/ target? facing target?
 
     # TODO replace set values with inputs, don't define d twice
     d = 5
@@ -51,9 +51,9 @@ def horiz_angle(time):
     azimuth = data[time]['azimuth']
 
     # adjust azimuth to be relative to direction of mirror setup.
-    # TODO combine w and d vars into just distance, then get heading separately
     azimuth -= int(angle)
 
+    # TODO this answer still relies on d and w vars, not on csv values
     h_angle = ((atan2(d, w) + azimuth) / 2 - 90)
 
     # returns answer between -180 and 180 degrees
@@ -65,11 +65,8 @@ def mirror_api():
     returns dict w/ horiz and vert mirror angles for every minute of daylight
     """
 
-    api = {}
-    for key in data.keys():
-        api[key] = {'vertical': vert_angle(key),
-                    'horizontal': horiz_angle(key)}
-    return api
+    return {key: {'vertical': vert_angle(key),
+                  'horizontal': horiz_angle(key)} for key in data.keys()}
 
 
 api = mirror_api()
