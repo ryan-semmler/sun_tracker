@@ -1,7 +1,7 @@
 from web_scrape import get_dict
 from math import atan2, degrees
 from datetime import datetime as dt
-import pprint
+# import pprint
 
 
 def get_date_location(lat, lon):
@@ -52,9 +52,12 @@ def horiz_angle(time):
 
     # adjust azimuth to be relative to direction of mirror setup.
     # TODO combine w and d vars into just distance, then get heading separately
-    azimuth -= azimuth - int(angle)
+    azimuth -= int(angle)
 
-    return round(((atan2(d, w) + azimuth) / 2 - 90) % 360, 4)
+    h_angle = ((atan2(d, w) + azimuth) / 2 - 90)
+
+    # returns answer between -180 and 180 degrees
+    return round(((h_angle + 180) % 360) - 180, 4)
 
 
 def mirror_api():
@@ -69,4 +72,12 @@ def mirror_api():
     return api
 
 
-pprint.pprint(mirror_api())
+api = mirror_api()
+
+# pprint.pprint(api)
+
+for i in range(7, 21):
+    time = "{}:00:00".format(i)
+    print("{}:".format(time),
+          "Azimuth:", data[time]['azimuth'],
+          "Horizontal angle:", api[time]['horizontal'])
