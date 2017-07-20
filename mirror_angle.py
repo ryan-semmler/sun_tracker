@@ -9,8 +9,8 @@ def get_date_location(lat, lon):
     start_year = now.year
     start_month = now.month
     start_day = now.day
-    latitude = '35.951053'
-    longitude = '-78.544401'
+    latitude = lat
+    longitude = lon
     return locals()
 
 
