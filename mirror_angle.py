@@ -1,7 +1,7 @@
 from web_scrape import get_dict
 from math import atan2, degrees
 from datetime import datetime as dt
-# import pprint
+import pprint
 
 
 def get_date_location(lat, lon):
@@ -14,9 +14,11 @@ def get_date_location(lat, lon):
     return locals()
 
 
+# TODO account for users who haven't run config yet
 with open('configuration.csv', 'r') as f:
     config = next(f)
-height, distance, angle, lat, lon = config.split(',')
+values = [float(item) for item in config.split(',')]
+height, distance, angle, lat, lon = values
 data = get_dict(get_date_location(lat, lon))
 
 
@@ -24,14 +26,9 @@ def vert_angle(time):
     """h and d are height and depth component of
     horiz. distance from mirror to target"""
 
-    # TODO replace set values with inputs
-    h = 8
-    d = 5
-    w = 10
+    altitude = float(data[time]['altitude'])
 
-    distance = (d ** 2 + w ** 2) ** 0.5
-
-    return round((degrees(atan2(h, distance)) - data[time]['altitude']) / 2, 4)
+    return round((degrees(atan2(height, distance)) - altitude) / 2, 4)
 
 
 def horiz_angle(time):
@@ -43,18 +40,10 @@ def horiz_angle(time):
 
     # TODO What should 0deg be? Set it to inline w/ target? facing target?
 
-    # TODO replace set values with inputs, don't define d twice
-    d = 5
-    w = 10
-
     # direction of the sun. measured in degrees counted clockwise from north.
     azimuth = data[time]['azimuth']
 
-    # adjust azimuth to be relative to direction of mirror setup.
-    azimuth -= int(angle)
-
-    # TODO this answer still relies on d and w vars, not on csv values
-    h_angle = ((atan2(d, w) + azimuth) / 2 - 90)
+    h_angle = (azimuth / 2 - 90)
 
     # returns answer between -180 and 180 degrees
     return round(((h_angle + 180) % 360) - 180, 4)
@@ -71,10 +60,10 @@ def mirror_api():
 
 api = mirror_api()
 
-# pprint.pprint(api)
+pprint.pprint(api)
 
-for i in range(7, 21):
-    time = "{}:00:00".format(i)
-    print("{}:".format(time),
-          "Azimuth:", data[time]['azimuth'],
-          "Horizontal angle:", api[time]['horizontal'])
+# for i in range(7, 21):
+#     time = "{}:00:00".format(i)
+#     print("{}:".format(time),
+#           "Altitude:", data[time]['altitude'],
+#           "Vertical angle:", api[time]['vertical'])
