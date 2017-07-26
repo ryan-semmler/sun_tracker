@@ -16,15 +16,15 @@ def get_date_location(lat, lon):
 
 
 def get_config():
-    try:
+    def read_config():
         with open('configuration.csv', 'r') as f:
             settings = next(f)
         return [float(item) for item in settings.split(',')]
+    try:
+        return read_config()
     except FileNotFoundError:
         config()
-        with open('configuration.csv', 'r') as f:
-            settings = next(f)
-        return [float(item) for item in settings.split(',')]
+        return read_config()
 
 
 def vert_angle(time, data, height, distance):
@@ -71,8 +71,11 @@ def main():
     for i in range(7, 21):
         time = "{}:00:00".format(i)
         print("{}:".format(time),
-              "Altitude:", data[time]['altitude'],
-              "Vertical angle:", api[time]['vertical'])
+              degrees(atan2(distance, height)) + api[time]['vertical'] -
+              (90-(data[time]['altitude'] + api[time]['vertical'])))
+            #   "Ground to mirror angle:", degrees(atan2(height, distance)),
+            #   "Altitude:", data[time]['altitude'],
+            #   "Vertical angle:", api[time]['vertical'])
 
 
 main()

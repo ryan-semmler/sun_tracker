@@ -53,6 +53,7 @@ def get_dict(info):
         total_string += str(item)[1:]
     clean_string = ''.join(total_string.split("''"))
     all_data = clean_string.split('\\n')[1:-1]
+
     data = {}
     for row in all_data:
         split_data = row.split(',')
@@ -60,4 +61,5 @@ def get_dict(info):
             altitude = round(90 - float(split_data[2]), 4)
             data[split_data[1]] = {'altitude': altitude,
                                    'azimuth': float(split_data[3])}
+
     return data
