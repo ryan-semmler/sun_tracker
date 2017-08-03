@@ -9,8 +9,6 @@ def get_timezone(lat, lon, year, month, day):
 
     api_key = 'AIzaSyDDbyw4tB8C9LhZ80VLnYFsLeBqBrXEj9g'
     timestamp = time()
-    lat = info['latitude']
-    lon = info['longitude']
     url = ''.join(['https://maps.googleapis.com/maps/api/timezone/json?',
                    'location={},{}'.format(lat, lon),
                    '&timestamp={}'.format(timestamp),
