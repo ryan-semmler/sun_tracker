@@ -1,7 +1,6 @@
 import requests
 from time import time
 from pprint import pformat
-import json
 
 
 def get_timezone(lat, lon, year, month, day):
@@ -57,4 +56,4 @@ def get_dict(year, month, day, lat, lon):
             data[split_data[1]] = {'altitude': altitude,
                                    'azimuth': float(split_data[3])}
 
-    return json.dumps(data)
+    return data

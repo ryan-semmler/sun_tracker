@@ -70,12 +70,6 @@ def main():
 
     for i in range(7, 21):
         time = "{}:00:00".format(i)
-        print("{}:".format(time),
-              degrees(atan2(distance, height)) + api[time]['vertical'] -
-              (90-(data[time]['altitude'] + api[time]['vertical'])))
-            #   "Ground to mirror angle:", degrees(atan2(height, distance)),
-            #   "Altitude:", data[time]['altitude'],
-            #   "Vertical angle:", api[time]['vertical'])
-
+        print("{}:".format(time), api[time])
 
 main()
