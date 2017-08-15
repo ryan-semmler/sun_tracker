@@ -2,8 +2,6 @@ from .web_scrape import get_dict
 from math import atan2, degrees
 
 
-# TODO: look for rounding errors. final api numbers slightly off from local app
-
 def vert_angle(time, data, height, distance):
 
     altitude = float(data[time]['altitude'])
